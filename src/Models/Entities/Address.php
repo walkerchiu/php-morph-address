@@ -1,0 +1,77 @@
+<?php
+
+namespace WalkerChiu\MorphAddress\Models\Entities;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use WalkerChiu\Core\Models\Entities\LangTrait;
+
+class Address extends Model
+{
+    use LangTrait;
+    use SoftDeletes;
+
+    protected $fillable = [
+        'morph_type', 'morph_id',
+        'type',
+        'phone', 'email',
+        'area',
+        'is_main'
+    ];
+
+    protected $hidden = [
+        'deleted_at'
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    protected $casts = [
+        'is_main' => 'boolean'
+    ];
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = array())
+    {
+        $this->table = config('wk-core.table.morph-address.addresses');
+
+        parent::__construct($attributes);
+    }
+
+    /**
+     * Get it's lang entity.
+     *
+     * @return Lang
+     */
+    public function lang()
+    {
+        if (config('wk-core.onoff.core-lang_core') || config('wk-morph-address.onoff.core-lang_core'))
+            return config('wk-core.class.core.langCore');
+        else
+            return config('wk-core.class.morph-address.addressLang');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function langs()
+    {
+        if (config('wk-core.onoff.core-lang_core') || config('wk-morph-address.onoff.core-lang_core'))
+            return $this->langsCore();
+        else
+            return $this->hasMany(config('wk-core.class.morph-address.addressLang'), 'morph_id', 'id');
+    }
+
+    /**
+     * Get the owning morph model.
+     */
+    public function morph()
+    {
+        return $this->morphTo();
+    }
+}
