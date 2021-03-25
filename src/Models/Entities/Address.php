@@ -2,11 +2,11 @@
 
 namespace WalkerChiu\MorphAddress\Models\Entities;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use WalkerChiu\Core\Models\Entities\LangTrait;
+use WalkerChiu\Core\Models\Entities\UuidModel;
 
-class Address extends Model
+class Address extends UuidModel
 {
     use LangTrait;
     use SoftDeletes;

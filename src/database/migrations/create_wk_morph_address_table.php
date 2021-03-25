@@ -9,8 +9,8 @@ class CreateWkMorphAddressTable extends Migration
     public function up()
     {
         Schema::create(config('wk-core.table.morph-address.addresses'), function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->morphs('morph');
+            $table->uuid('id');
+            $table->uuidMorphs('morph');
             $table->string('type', 15);
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
@@ -20,6 +20,7 @@ class CreateWkMorphAddressTable extends Migration
             $table->timestampsTz();
             $table->softDeletes();
 
+            $table->primary('id');
             $table->index(['morph_type', 'morph_id', 'type']);
             $table->index('type');
             $table->index('phone');
@@ -28,9 +29,9 @@ class CreateWkMorphAddressTable extends Migration
         });
         if (!config('wk-morph-address.onoff.core-lang_core')) {
             Schema::create(config('wk-core.table.morph-address.addresses_lang'), function (Blueprint $table) {
-                $table->bigIncrements('id');
-                $table->morphs('morph');
-                $table->unsignedBigInteger('user_id')->nullable();
+                $table->uuid('id');
+                $table->uuidMorphs('morph');
+                $table->uuid('user_id')->nullable();
                 $table->string('code');
                 $table->string('key');
                 $table->text('value')->nullable();
@@ -43,6 +44,8 @@ class CreateWkMorphAddressTable extends Migration
                     ->on(config('wk-core.table.user'))
                     ->onDelete('set null')
                     ->onUpdate('cascade');
+
+                $table->primary('id');
             });
         }
     }
