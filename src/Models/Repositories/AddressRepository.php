@@ -20,13 +20,14 @@ class AddressRepository extends Repository
     }
 
     /**
-     * @param String $code
-     * @param Array  $data
-     * @param Int    $page
-     * @param Int    $nums per page
-     * @return Array
+     * @param String  $code
+     * @param Array   $data
+     * @param Int     $page
+     * @param Int     $nums per page
+     * @param Boolean $toArray
+     * @return Array|Collection
      */
-    public function list(String $code, Array $data, $page = null, $nums = null)
+    public function list(String $code, Array $data, $page = null, $nums = null, $toArray = true)
     {
         $this->assertForPagination($page, $nums);
 
@@ -93,20 +94,24 @@ class AddressRepository extends Repository
                             ->when(is_integer($page) && is_integer($nums), function ($query) use ($page, $nums) {
                                 return $query->forPage($page, $nums);
                             });
-        $list = [];
-        foreach ($records as $record) {
-            $data = $record->toArray();
-            array_push($list,
-                array_merge($data, [
-                    'name'          => $record->findLangByKey('name'),
-                    'address_line1' => $record->findLangByKey('address_line1'),
-                    'address_line2' => $record->findLangByKey('address_line2'),
-                    'guide'         => $record->findLangByKey('guide')
-                ])
-            );
-        }
+        if ($toArray) {
+            $list = [];
+            foreach ($records as $record) {
+                $data = $record->toArray();
+                array_push($list,
+                    array_merge($data, [
+                        'name'          => $record->findLangByKey('name'),
+                        'address_line1' => $record->findLangByKey('address_line1'),
+                        'address_line2' => $record->findLangByKey('address_line2'),
+                        'guide'         => $record->findLangByKey('guide')
+                    ])
+                );
+            }
 
-        return $list;
+            return $list;
+        } else {
+            return $records;
+        }
     }
 
     /**
