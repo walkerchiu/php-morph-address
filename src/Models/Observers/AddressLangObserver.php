@@ -42,7 +42,7 @@ class AddressLangObserver
                 ->where('key', $entity->key)
                 ->where('id', '<>', $entity->id);
 
-        if (config('wk-core.lang_log') || config('wk-morph-address.lang_log'))
+        if (config('wk-morph-address.soft_delete') && (config('wk-core.lang_log') || config('wk-morph-address.lang_log')))
             $query->update(['is_current' => 0]);
         else
             $query->forceDelete();

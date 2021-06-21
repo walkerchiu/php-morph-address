@@ -109,6 +109,10 @@ class AddressObserver
      */
     public function deleted($entity)
     {
+        if (!config('wk-morph-address.soft_delete')) {
+            $entity->forceDelete();
+        }
+
         if ($entity->isForceDeleting()) {
             $entity->langs->withTrashed()->forceDelete();
         }
