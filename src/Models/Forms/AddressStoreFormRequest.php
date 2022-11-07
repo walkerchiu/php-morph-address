@@ -14,7 +14,7 @@ class AddressStoreFormRequest extends AddressFormRequest
     {
         $request = Request::instance();
         $data = array_merge($this->all(), [
-            'morph_type' => config('wk-core.class.site.site'),
+            'morph_type' => config('wk-core.class.site-mall.site'),
             'morph_id'   => $request->route('id'),
             'type'       => 'site'
         ]);
